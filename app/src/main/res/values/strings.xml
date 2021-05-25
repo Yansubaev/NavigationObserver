@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Navigation Observer</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="collecting_data">Collecting geolocation data</string>
+    <string name="use_background_location_service">Location service in background</string>
+    <string name="clear_history">Clear history</string>
+    <string name="get_statistics">Get statistics</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="distance_traveled">Distance traveled (km):</string>
+    <string name="average_speed">Average speed (km/h):</string>
+    <string name="not_enough_information">Not enough information</string>
+</resources>

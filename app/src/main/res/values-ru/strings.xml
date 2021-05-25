@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Navigation Observer</string>
+    <string name="start">Старт</string>
+    <string name="stop">Стоп</string>
+    <string name="collecting_data">Собираем данные о геолокации</string>
+    <string name="use_background_location_service">Служба геолокации в фоновом рeжиме</string>
+    <string name="clear_history">Clear history</string>
+    <string name="get_statistics">Get statistics</string>
+    <string name="distance_traveled">Пройденное расстояние (км):</string>
+    <string name="average_speed">Средняя скорость (км/ч):</string>
+    <string name="not_enough_information">Недостаточно информации</string>
+</resources>
