@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.yans.navobserver.room.dao.LocationInfoDao
+import com.yans.navobserver.room.entities.LatLonAlt
 import com.yans.navobserver.room.entities.LocationInfo
 
 @Database(

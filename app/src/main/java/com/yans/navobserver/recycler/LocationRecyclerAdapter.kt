@@ -3,6 +3,7 @@ package com.yans.navobserver.recycler
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.yans.navobserver.databinding.ItemLocationInfoBinding
@@ -10,7 +11,7 @@ import com.yans.navobserver.room.entities.LocationInfo
 
 class LocationRecyclerAdapter(
     private val context: Context
-) : ListAdapter<LocationInfo, LocationViewHolder>(DiffUtilsCallback()) {
+) : PagingDataAdapter<LocationInfo, LocationViewHolder>(DiffUtilsCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationViewHolder =
         LocationViewHolder(

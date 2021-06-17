@@ -7,6 +7,8 @@ import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yans.navobserver.Constants
 import com.yans.navobserver.databinding.ActivityMainBinding
@@ -16,10 +18,13 @@ import com.yans.navobserver.room.NavObserverDatabase
 import com.yans.navobserver.service.LocationService
 import com.yans.navobserver.service.LocationViewModel
 import com.yans.navobserver.service.ViewModelFactory
+import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private val adapter : LocationRecyclerAdapter by lazy { LocationRecyclerAdapter(this) }
 
     private val viewModel by lazy {
         ViewModelProvider(
@@ -42,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         }
         initRecycler()
         binding.btnClear.setOnClickListener {
-            viewModel.clearInfos()
+            viewModel.clearInfo()
         }
         binding.btnStatistics.setOnClickListener {
             StatisticsFragment().show(
@@ -58,22 +63,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initRecycler() {
-        val adapter = LocationRecyclerAdapter(this)
         binding.recLocations.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recLocations.adapter = adapter
 
-        viewModel.locationData.observe(this) {
-            if (it == null) {
-                binding.laySwipeRefresh.isRefreshing = true
-            } else {
-                adapter.submitList(it)
-                binding.laySwipeRefresh.isRefreshing = false
+        lifecycleScope.launchWhenCreated {
+            viewModel.locations.collectLatest {
+                adapter.submitData(it)
             }
         }
 
+        adapter.addLoadStateListener { state ->
+            binding.laySwipeRefresh.isRefreshing = state.refresh == LoadState.Loading
+        }
+
         binding.laySwipeRefresh.setOnRefreshListener {
-            viewModel.fetchInfos()
+            adapter.refresh()
         }
     }
 
@@ -113,33 +118,28 @@ class MainActivity : AppCompatActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == Constants.REQUEST_PERMISSION_LOCATION && permissions.size > 1 &&
             permissions[0] == Manifest.permission.ACCESS_FINE_LOCATION &&
             permissions[1] == Manifest.permission.ACCESS_COARSE_LOCATION &&
             (
                     grantResults[0] == PackageManager.PERMISSION_GRANTED
-                            || grantResults[1] == PackageManager.PERMISSION_GRANTED
-                            || grantResults[2] == PackageManager.PERMISSION_GRANTED)
+                            || grantResults[1] == PackageManager.PERMISSION_GRANTED)
         ) {
             startLocationService()
         } else {
             binding.swtLocationService.isChecked = false
             stopLocationService()
         }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun startLocationService(forceStart: Boolean = false) {
         sendCommand(Constants.START_LOCATION_SERVICE)
-        LocationData.locationData.observe(this) { l ->
-            //Log.d(javaClass.simpleName, "Lat: ${l.latitude}, Lon: ${l.longitude}")
-            viewModel.fetchInfos()
-        }
     }
 
     private fun stopLocationService() {
         sendCommand(Constants.STOP_LOCATION_SERVICE)
-        LocationData.locationData.removeObservers(this)
+        //LocationData.locationData.removeObservers(this)
     }
 
     private fun sendCommand(command: String) {

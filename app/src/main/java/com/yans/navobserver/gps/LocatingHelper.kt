@@ -27,14 +27,17 @@ object LocatingHelper : LocationListener {
                 ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                     context,
                     Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
                 return
             }
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
-                3000L,
-                10F,
+                1000L,
+                1F,
                 this
             )
         }

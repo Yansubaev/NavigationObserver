@@ -10,9 +10,11 @@ class LocationViewHolder(
     private val binding: ItemLocationInfoBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun initView(model: LocationInfo){
-        binding.txtLatitude.text = model.latitude.toString()
-        binding.txtLongitude.text = model.longitude.toString()
-        binding.txtDate.text = SimpleDateFormat("dd-MM-yyyy").format(Date(model.time));
+    fun initView(model: LocationInfo?){
+        model?.let { model ->
+            binding.txtLatitude.text = model.latitude.toString()
+            binding.txtLongitude.text = model.longitude.toString()
+            binding.txtDate.text = SimpleDateFormat("dd-MM-yyyy:T:hh:mm:ss", Locale.US).format(Date(model.time));
+        }
     }
 }

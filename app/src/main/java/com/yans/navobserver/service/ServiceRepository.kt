@@ -19,4 +19,10 @@ class ServiceRepository(private val dao: LocationInfoDao) {
     suspend fun clearAllData() = withContext(Dispatchers.IO){
         dao.deleteAll()
     }
+
+    fun getPagedAllInfo() = dao.getPaged()
+
+    suspend fun getLatLon() = dao.getLatLon()
+
+    suspend fun getTimes() = dao.getTimes()
 }

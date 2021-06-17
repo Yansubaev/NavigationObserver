@@ -34,11 +34,10 @@ class LocationService : LifecycleService() {
     }
 
     private fun locationChanged(l: Location) {
-        Log.d(javaClass.simpleName, "Lat: ${l.latitude}, Lon: ${l.longitude}")
         lifecycleScope.launch {
             repository.insertInfo(l, Calendar.getInstance().timeInMillis)
         }
-        LocationData.locationData.postValue(l)
+        //LocationData.locationData.postValue(l)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -78,7 +77,7 @@ class LocationService : LifecycleService() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel(): String {
-        val channelName = "Location Service Channel"
+        val channelName = "Location Service"
         val channel = NotificationChannel(
             Constants.LOCATION_CHANNEL_ID,
             channelName,
